@@ -1,6 +1,13 @@
+//
+//  PokemonDetailMapper.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
+//
+
 struct PokemonDetailMapper {
     
-    func map(dto: PokemonDetailModel?) throws -> PokemonDetailEntity {
+    func map(dto: PokemonDetailModel?) throws -> PokemonDetailBusinessEntity {
         guard let dto = dto else {
             throw PokemonDetailError.nilDTO
         }
@@ -13,22 +20,6 @@ struct PokemonDetailMapper {
             throw PokemonDetailError.emptyName
         }
 
-        let entity = PokemonDetailEntity(
-            id: dto.id,
-            name: dto.name.capitalized,
-            imageUrl: dto.sprites.frontDefault,
-            types: dto.types.map { $0.type.name.capitalized },
-            height: dto.height,
-            weight: dto.weight,
-            stats: dto.stats.map {
-                PokemonDetailEntity.Stat(
-                    name: $0.stat.name.capitalized,
-                    value: $0.baseStat
-                )
-            },
-            abilities: dto.abilities.map { $0.ability.name.capitalized }
-        )
-
-        return entity
+        return PokemonDetailBusinessEntity(pokemon: dto)
     }
 }

@@ -1,3 +1,11 @@
+//
+//  PokemonDetailBusinessEntity.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
+//
+
+
 import Foundation
 
 class PokemonDetailBusinessEntity {
@@ -31,6 +39,10 @@ class PokemonDetailBusinessEntity {
     // Accesos directos
     var raw: PokemonDetailModel {
         pokemon
+    }
+    
+    var pokemonRaw: PokemonModel {
+        PokemonModel(id: pokemon.id, name: pokemon.name, url: imageUrl ?? "")
     }
 
     var name: String {

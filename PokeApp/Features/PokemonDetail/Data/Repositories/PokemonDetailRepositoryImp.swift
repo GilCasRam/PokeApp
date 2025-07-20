@@ -1,3 +1,11 @@
+//
+//  PokemonDetailRepositoryImp.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
+//
+
+
 final class PokemonDetailRepositoryImp: PokemonDetailRepositoryProtocol {
     private let dataSource: PokemonDetailDataSourceProtocol
     private let mapper: PokemonDetailMapper
@@ -10,7 +18,7 @@ final class PokemonDetailRepositoryImp: PokemonDetailRepositoryProtocol {
         self.mapper = mapper
     }
 
-    func getPokemonDetail(id: Int) async -> Result<PokemonDetailEntity, PokemonDetailError> {
+    func getPokemonDetail(id: Int) async -> Result<PokemonDetailBusinessEntity, PokemonDetailError> {
         let result = await dataSource.fetchPokemonDetail(id: id)
 
         guard let dto = try? result.get() else {

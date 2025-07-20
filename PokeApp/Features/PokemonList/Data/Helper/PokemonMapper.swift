@@ -1,3 +1,12 @@
+//
+//  PokemonMapper.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
+//
+
+import Foundation
+
 struct PokemonMapper {
     
     func map(dto: PokemonModel?) throws -> PokemonBusinessEntity {
@@ -13,7 +22,7 @@ struct PokemonMapper {
             throw PokemonError.emptyName
         }
 
-        let entity = PokemonEntity(id: dto.id, name: dto.name)
+        let entity = PokemonModel(id: dto.id, name: dto.name, url: dto.url)
         return PokemonBusinessEntity(pokemon: entity)
     }
 

@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 extension PokeApp {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<PokeApp> {

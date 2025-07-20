@@ -1,12 +1,21 @@
+//
+//  PokemonStatsViewController.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
+//
+
 import UIKit
 import SwiftUI
 
 final class PokemonStatsViewController: UIViewController {
 
     private let pokemon: PokemonBusinessEntity
-
-    init(pokemon: PokemonBusinessEntity) {
+    private let pokemonDetail: PokemonDetailBusinessEntity
+    
+    init(pokemon: PokemonBusinessEntity, pokemonDetail: PokemonDetailBusinessEntity) {
         self.pokemon = pokemon
+        self.pokemonDetail = pokemonDetail
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -20,7 +29,7 @@ final class PokemonStatsViewController: UIViewController {
     }
 
     private func setupHostingView() {
-        let viewModel = PokemonStatsViewModel(pokemon: pokemon)
+        let viewModel = PokemonStatsViewModel(pokemon: pokemonDetail)
         let statsView = PokemonStatsView(viewModel: viewModel)
         let hostingController = UIHostingController(rootView: statsView)
 

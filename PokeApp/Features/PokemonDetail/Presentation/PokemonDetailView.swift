@@ -1,16 +1,20 @@
+//
+//  PokemonDetailView.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
+//
+
 import SwiftUI
 
 struct PokemonDetailView: View {
     @ObservedObject var viewModel: PokemonDetailViewModel
-
+    var onStatsTap: (() -> Void)? = nil
+    
     var body: some View {
         VStack {
             if viewModel.isLoading {
                 ProgressView("Loading...")
-            } else if let error = viewModel.errorMessage {
-                Text(error)
-                    .foregroundColor(.red)
-                    .multilineTextAlignment(.center)
             } else {
                 detailContent
             }
@@ -18,6 +22,33 @@ struct PokemonDetailView: View {
         .padding()
         .navigationTitle(viewModel.entity.name)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    viewModel.toggleFavorite()
+                }) {
+                    Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+                        .foregroundColor(.red)
+                }
+            }
+        }
+        .alert(isPresented: Binding<Bool>(
+            get: { viewModel.errorMessage != nil },
+            set: { newValue in
+                if !newValue {
+                    viewModel.errorMessage = nil
+                }
+            }
+        )) {
+            Alert(
+                title: Text("Error"),
+                message: Text(viewModel.errorMessage ?? "Unknown error"),
+                primaryButton: .default(Text("Retry")) {
+                    viewModel.retry()
+                },
+                secondaryButton: .cancel(Text("OK"))
+            )
+        }
     }
 
     private var detailContent: some View {
@@ -46,6 +77,29 @@ struct PokemonDetailView: View {
                 Text("Height: \(viewModel.entity.height)")
                 Text("Weight: \(viewModel.entity.weight)")
 
+                HStack{
+                    Button(action: {
+                        viewModel.toggleFavorite()
+                    }) {
+                        Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.red)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .clipShape(Circle())
+                            .shadow(radius: 3)
+                    }
+                    Button("Ver estadísticas") {
+                        onStatsTap?()
+                    }
+                    .padding()
+                    .background(Color.blue.opacity(0.2))
+                    .cornerRadius(8)
+                    .disabled(!viewModel.isDetailLoaded)
+                    .opacity(viewModel.isDetailLoaded ? 1 : 0.5)
+                }
+                
                 Divider()
 
                 Text("Types")
@@ -78,7 +132,10 @@ struct PokemonDetailView: View {
                     Text(ability)
                 }
             }
+            .background(Color.red.opacity(0.5))
             .frame(maxWidth: .infinity, alignment: .leading)
+        }.refreshable {
+            viewModel.retry()
         }
     }
 }
