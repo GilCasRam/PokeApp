@@ -11,7 +11,7 @@ import UIKit
 final class PokemonFavoritesManager {
 
     static let shared = PokemonFavoritesManager()
-    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = UIApplication.context
 
     // MARK: - Add
     func add(pokemon: PokemonBusinessEntity) {
@@ -19,9 +19,8 @@ final class PokemonFavoritesManager {
 
         let entity = PokeApp(context: context)
         entity.id = Int64(pokemon.id)
-        entity.name = pokemon.name
-        entity.imageUrl = pokemon.imageUrl
-
+        entity.name = CryptoHelper.encrypt(pokemon.name)
+        entity.imageUrl = CryptoHelper.encrypt(pokemon.imageUrl)
         saveContext()
     }
 
@@ -55,7 +54,16 @@ final class PokemonFavoritesManager {
         do {
             try context.save()
         } catch {
-            print("❌ Failed to save favorite: \(error.localizedDescription)")
+            print("Failed to save favorite: \(error.localizedDescription)")
         }
+    }
+}
+
+extension UIApplication {
+    static var context: NSManagedObjectContext {
+        guard let delegate = shared.delegate as? AppDelegate else {
+            fatalError("No se pudo obtener AppDelegate")
+        }
+        return delegate.persistentContainer.viewContext
     }
 }

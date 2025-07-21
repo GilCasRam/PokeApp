@@ -75,7 +75,6 @@ final class PokemonListCell: UICollectionViewCell {
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
             nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
-        
         contentView.backgroundColor = UIColor(named: "PrimaryYellow")
         contentView.layer.cornerRadius = 12
         contentView.layer.masksToBounds = false

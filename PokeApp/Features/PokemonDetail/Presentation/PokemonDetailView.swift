@@ -9,12 +9,11 @@ import SwiftUI
 
 struct PokemonDetailView: View {
     @ObservedObject var viewModel: PokemonDetailViewModel
-    var onStatsTap: (() -> Void)? = nil
-    
+    var onStatsTap: (() -> Void)?
     var body: some View {
         VStack {
             if viewModel.isLoading {
-                ProgressView("Loading...")
+                PokeballLoader()
             } else {
                 detailContent
             }
@@ -22,16 +21,16 @@ struct PokemonDetailView: View {
         .padding()
         .navigationTitle(viewModel.entity.name)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    viewModel.toggleFavorite()
-                }) {
-                    Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
-                        .foregroundColor(.red)
-                }
-            }
-        }
+//        .toolbar {
+//            ToolbarItem(placement: .navigationBarTrailing) {
+//                Button(action: {
+//                    viewModel.toggleFavorite()
+//                }) {
+//                    Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+//                        .foregroundColor(.red)
+//                }
+//            }
+//        }
         .alert(isPresented: Binding<Bool>(
             get: { viewModel.errorMessage != nil },
             set: { newValue in
@@ -78,10 +77,10 @@ struct PokemonDetailView: View {
                 Text("Height: \(viewModel.entity.height)")
                 Text("Weight: \(viewModel.entity.weight)")
 
-                HStack {
+                VStack {
                     Button(action: {
                         viewModel.toggleFavorite()
-                    }) {
+                    }, label: {
                         Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
                             .resizable()
                             .frame(width: 24, height: 24)
@@ -90,7 +89,7 @@ struct PokemonDetailView: View {
                             .background(Color(.systemGray6))
                             .clipShape(Circle())
                             .shadow(radius: 3)
-                    }
+                    })
                     Button("Ver estadísticas") {
                         onStatsTap?()
                     }
@@ -100,7 +99,6 @@ struct PokemonDetailView: View {
                     .disabled(!viewModel.isDetailLoaded)
                     .opacity(viewModel.isDetailLoaded ? 1 : 0.5)
                 }
-                
                 Divider()
 
                 Text("Types")

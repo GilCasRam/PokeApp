@@ -8,7 +8,6 @@
 import Foundation
 
 struct PokemonDetailFactory {
-    
     static func infrastructure() -> PokemonDetailInfrastructureProtocol {
         PokemonDetailInfrastructureImp()
     }

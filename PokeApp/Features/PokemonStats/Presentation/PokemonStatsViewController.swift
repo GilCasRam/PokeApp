@@ -12,7 +12,6 @@ final class PokemonStatsViewController: UIViewController {
 
     private let pokemon: PokemonBusinessEntity
     private let pokemonDetail: PokemonDetailBusinessEntity
-    
     init(pokemon: PokemonBusinessEntity, pokemonDetail: PokemonDetailBusinessEntity) {
         self.pokemon = pokemon
         self.pokemonDetail = pokemonDetail

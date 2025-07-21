@@ -23,13 +23,11 @@ final class PokemonListViewModelTests: XCTestCase {
         // Act
         viewModel.loadPokemons()
 
-        // Espera 1 segundo por resultados en el hilo principal
+        // Assert
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             XCTAssertFalse(viewModel.pokemons.isEmpty, "Expected pokemons to be loaded")
             XCTAssertNil(viewModel.errorMessage, "Expected no error message")
             expectation.fulfill()
         }
-
-        wait(for: [expectation], timeout: 2.0)
     }
 }

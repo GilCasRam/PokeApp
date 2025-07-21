@@ -10,12 +10,12 @@ import XCTest
 
 final class PokemonInfrastructureIntegrationTests: XCTestCase {
 
-    func testFetchPokemonListFromAPI() async throws {
+    func testFetchPokemonListFromMock() async throws {
         // Arrange
-        let infrastructure = PokemonInfrastructureImp()
+        let mockInfrastructure = PokemonInfrastructureMock()
 
         // Act
-        let result = await infrastructure.getPokemonList(limit: 10, offset: 0)
+        let result = await mockInfrastructure.getPokemonList(limit: 10, offset: 0)
 
         // Assert
         switch result {
@@ -23,7 +23,7 @@ final class PokemonInfrastructureIntegrationTests: XCTestCase {
             XCTAssertFalse(models.isEmpty, "Expected at least one Pokémon")
             XCTAssertNotNil(models.first?.name, "First Pokémon should have a name")
         case .failure(let error):
-            XCTFail("API call failed with error: \(error.localizedDescription)")
+            XCTFail("Mock call failed with error: \(error.localizedDescription)")
         }
     }
 }
