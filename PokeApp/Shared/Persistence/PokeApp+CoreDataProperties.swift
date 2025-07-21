@@ -21,6 +21,6 @@ extension PokeApp {
 
 }
 
-extension PokeApp : Identifiable {
+extension PokeApp: Identifiable {
 
 }

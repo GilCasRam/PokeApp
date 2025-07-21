@@ -26,7 +26,6 @@ final class FavoritesViewController: UIViewController {
 
     private func setupUI() {
         title = "Favoritos"
-       //view.backgroundColor = UIColor(Color.red.opacity(0.5))
 
         let layout = UICollectionViewFlowLayout()
         let spacing: CGFloat = 12
@@ -50,7 +49,7 @@ final class FavoritesViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
 
@@ -94,10 +93,12 @@ extension FavoritesViewController: UICollectionViewDataSource, UICollectionViewD
                 let statsViewModel = PokemonStatsViewModel(pokemon: detailViewModel.entity)
                 let statsView = PokemonStatsView(viewModel: statsViewModel)
                 let statsController = UIHostingController(rootView: statsView)
+                statsController.view.backgroundColor = UIColor(named: "red_background")
                 self.navigationController?.pushViewController(statsController, animated: true)
             }
         )
         let hostingController = UIHostingController(rootView: detailView)
+        hostingController.view.backgroundColor = UIColor(named: "red_background")
         navigationController?.pushViewController(hostingController, animated: true)
     }
 }

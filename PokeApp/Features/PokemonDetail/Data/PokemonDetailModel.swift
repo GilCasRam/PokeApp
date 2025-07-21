@@ -5,7 +5,6 @@
 //  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
 //
 
-
 import Foundation
 
 struct PokemonDetailModel: Decodable {

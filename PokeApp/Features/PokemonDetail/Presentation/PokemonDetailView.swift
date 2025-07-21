@@ -74,10 +74,11 @@ struct PokemonDetailView: View {
                 }
 
                 Text("ID: \(viewModel.entity.id)")
+                    .accessibilityIdentifier("PokemonDetailTitle")
                 Text("Height: \(viewModel.entity.height)")
                 Text("Weight: \(viewModel.entity.weight)")
 
-                HStack{
+                HStack {
                     Button(action: {
                         viewModel.toggleFavorite()
                     }) {
@@ -132,7 +133,7 @@ struct PokemonDetailView: View {
                     Text(ability)
                 }
             }
-            .background(Color.red.opacity(0.5))
+            .background(Color("red_background"))
             .frame(maxWidth: .infinity, alignment: .leading)
         }.refreshable {
             viewModel.retry()

@@ -35,6 +35,3 @@ final class PokemonInfrastructureImp: PokemonInfrastructureProtocol {
         }
     }
 }
-
-
-

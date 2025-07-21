@@ -38,6 +38,7 @@ struct PokemonStatsView: View {
 
             Spacer()
         }
+//        .background(Color("red_background"))
         .padding()
         .navigationTitle(viewModel.pokemon.name)
         .navigationBarTitleDisplayMode(.inline)

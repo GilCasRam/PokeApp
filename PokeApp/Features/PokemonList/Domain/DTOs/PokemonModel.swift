@@ -5,7 +5,6 @@
 //  Created by Gil Alfredo Casimiro Ramírez on 16/07/25.
 //
 
-
 import Foundation
 
 struct PokemonListResponse: Decodable {

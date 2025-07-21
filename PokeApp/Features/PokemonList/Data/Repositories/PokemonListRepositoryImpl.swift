@@ -15,7 +15,6 @@ protocol PokemonRepositoryProtocol {
     func getPokemonList(limit: Int, offset: Int) async -> Result<[PokemonBusinessEntity], PokemonError>
 }
 
-
 final class PokemonRepositoryImp: PokemonRepositoryProtocol {
     private let dataSource: PokemonDataSourceProtocol
     private let mapper: PokemonMapper

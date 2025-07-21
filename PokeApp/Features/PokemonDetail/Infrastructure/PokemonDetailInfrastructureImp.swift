@@ -5,10 +5,12 @@
 //  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
 //
 
-
 import Foundation
 
 final class PokemonDetailInfrastructureImp: PokemonDetailInfrastructureProtocol {
+    let myVariable      = 10
+    let optionalValue: String! = nil
+    
     func getPokemonDetail(id: Int) async -> Result<PokemonDetailModel, PokemonDetailError> {
         if Bool.random(probability: 0.3) {
             return .failure(.generic)

@@ -55,6 +55,7 @@ final class PokemonListViewController: UIViewController {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         collectionView.refreshControl = refreshControl
+        collectionView.accessibilityIdentifier = "PokemonListCollectionView"
 
         view.addSubview(collectionView)
 
@@ -82,7 +83,7 @@ final class PokemonListViewController: UIViewController {
             errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             errorLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             errorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            errorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            errorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
     // MARK: - Bind ViewModel
@@ -157,10 +158,12 @@ extension PokemonListViewController: UICollectionViewDataSource, UICollectionVie
                 let statsViewModel = PokemonStatsViewModel(pokemon: detailViewModel.entity)
                 let statsView = PokemonStatsView(viewModel: statsViewModel)
                 let statsController = UIHostingController(rootView: statsView)
+                statsController.view.backgroundColor = UIColor(named: "red_background")
                 self.navigationController?.pushViewController(statsController, animated: true)
             }
         )
         let hostingController = UIHostingController(rootView: detailView)
+        hostingController.view.backgroundColor = UIColor(named: "red_background") 
         navigationController?.pushViewController(hostingController, animated: true)
     }
     
