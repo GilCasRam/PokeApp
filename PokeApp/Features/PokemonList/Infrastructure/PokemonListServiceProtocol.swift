@@ -1,41 +1,37 @@
+//
+//  PokemonListServiceProtocol.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 16/07/25.
+//
+
 import Foundation
 
-protocol PokemonListServiceProtocol {
-    func fetchPokemonList(limit: Int) async throws -> [PokemonSummary]
+protocol PokemonInfrastructureProtocol {
+    func getPokemonList(limit: Int, offset: Int) async -> Result<[PokemonModel], PokemonError>
 }
 
-final class PokemonListService: PokemonListServiceProtocol {
-    
-    func fetchPokemonList(limit: Int) async throws -> [PokemonSummary] {
-        let urlString = "https://pokeapi.co/api/v2/pokemon?limit=\(limit)"
+final class PokemonInfrastructureImp: PokemonInfrastructureProtocol {
+
+    func getPokemonList(limit: Int, offset: Int) async -> Result<[PokemonModel], PokemonError> {
+        let urlString = "https://pokeapi.co/api/v2/pokemon?limit=\(limit)&offset=\(offset)"
+        
         guard let url = URL(string: urlString) else {
-            throw URLError(.badURL)
+            return .failure(.invalidURL)
         }
 
-        let (data, response) = try await URLSession.shared.data(from: url)
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decoded = try JSONDecoder().decode(PokemonListResponse.self, from: data)
 
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200..<300).contains(httpResponse.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
+            let models: [PokemonModel] = decoded.results.enumerated().map { index, item in
+                let id = Int(item.url.split(separator: "/").last ?? "\(index)") ?? index
+                return PokemonModel(id: id, name: item.name.capitalized, url: item.url)
+            }
 
-        let result = try JSONDecoder().decode(PokemonListResponse.self, from: data)
-        return result.results.enumerated().map { index, item in
-            // PokeAPI doesn't return ID, so we extract it from the URL
-            let id = Int(item.url
-                .split(separator: "/")
-                .last(where: { !$0.isEmpty }) ?? "0") ?? index + 1
-
-            return PokemonSummary(id: id, name: item.name.capitalized, url: item.url)
+            return .success(models)
+        } catch {
+            return .failure(.generic)
         }
     }
-}
-
-private struct PokemonListResponse: Decodable {
-    let results: [PokemonListItem]
-}
-
-private struct PokemonListItem: Decodable {
-    let name: String
-    let url: String
 }

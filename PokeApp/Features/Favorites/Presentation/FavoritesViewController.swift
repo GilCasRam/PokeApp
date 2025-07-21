@@ -1,4 +1,12 @@
+//
+//  FavoritesViewController.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
+//
+
 import UIKit
+import SwiftUI
 
 final class FavoritesViewController: UIViewController {
 
@@ -13,12 +21,11 @@ final class FavoritesViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadFavorites() // actualizar al volver
+        loadFavorites() 
     }
 
     private func setupUI() {
         title = "Favoritos"
-        view.backgroundColor = .systemBackground
 
         let layout = UICollectionViewFlowLayout()
         let spacing: CGFloat = 12
@@ -31,7 +38,7 @@ final class FavoritesViewController: UIViewController {
 
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .clear
+        collectionView.backgroundColor = UIColor(Color.red.opacity(0.5))
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(PokemonListCell.self, forCellWithReuseIdentifier: PokemonListCell.identifier)
@@ -42,7 +49,7 @@ final class FavoritesViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
 
@@ -54,5 +61,44 @@ final class FavoritesViewController: UIViewController {
             )
         }
         collectionView.reloadData()
+    }
+}
+
+extension FavoritesViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return favorites.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: PokemonListCell.identifier,
+            for: indexPath) as? PokemonListCell else {
+            return UICollectionViewCell()
+        }
+        
+        cell.configure(with: favorites[indexPath.item])
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selected = favorites[indexPath.item]
+        let detailViewModel = PokemonDetailViewModel()
+        detailViewModel.loadDetail(id: selected.id)
+        
+        let detailView = PokemonDetailView(
+            viewModel: detailViewModel,
+            onStatsTap: { [weak self] in
+                guard let self = self else { return }
+                let statsViewModel = PokemonStatsViewModel(pokemon: detailViewModel.entity)
+                let statsView = PokemonStatsView(viewModel: statsViewModel)
+                let statsController = UIHostingController(rootView: statsView)
+                statsController.view.backgroundColor = UIColor(named: "red_background")
+                self.navigationController?.pushViewController(statsController, animated: true)
+            }
+        )
+        let hostingController = UIHostingController(rootView: detailView)
+        hostingController.view.backgroundColor = UIColor(named: "red_background")
+        navigationController?.pushViewController(hostingController, animated: true)
     }
 }

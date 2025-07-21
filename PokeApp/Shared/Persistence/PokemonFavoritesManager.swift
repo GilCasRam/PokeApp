@@ -1,3 +1,10 @@
+//
+//  PokemonFavoritesManager.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
+//
+
 import CoreData
 import UIKit
 
@@ -8,10 +15,12 @@ final class PokemonFavoritesManager {
 
     // MARK: - Add
     func add(pokemon: PokemonBusinessEntity) {
+        guard fetch(by: pokemon.id) == nil else { return }
+
         let entity = PokeApp(context: context)
         entity.id = Int64(pokemon.id)
         entity.name = pokemon.name
-        entity.imageUrl = pokemon.rawPokemon.imageUrl
+        entity.imageUrl = pokemon.imageUrl
 
         saveContext()
     }

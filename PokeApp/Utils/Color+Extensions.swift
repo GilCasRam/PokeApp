@@ -1,3 +1,10 @@
+//
+//  Color+Extensions.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 20/07/25.
+//
+
 import SwiftUI
 
 extension Color {

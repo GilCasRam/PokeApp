@@ -1,0 +1,44 @@
+# .swiftlint.yml
+
+# Directorios incluidos (ajusta si tu estructura cambia)
+included:
+  - PokeApp
+
+# Directorios o archivos excluidos
+excluded:
+  - Pods
+  - Carthage
+  - .git
+  - fastlane
+
+# Desactivar reglas que generan mucho ruido
+disabled_rules:
+  - line_length
+  - trailing_whitespace
+  - force_cast
+  - todo
+
+# Reglas que activamos porque son útiles en producción
+opt_in_rules:
+  - force_unwrapping
+  - unused_declaration
+  - empty_count
+  - explicit_init
+  - fatal_error_message
+  - private_outlet
+  - yoda_condition
+
+# Regla personalizada para espacios innecesarios
+trailing_newline:
+  severity: warning
+
+# Configuración de línea máxima (puedes reactivarlo si quieres)
+# line_length:
+#   warning: 120
+#   error: 200
+
+# Niveles de severidad por defecto
+severity_levels:
+  warning: 1
+  error: 2
+

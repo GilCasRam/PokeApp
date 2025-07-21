@@ -1,3 +1,12 @@
+//
+//  PokemonMapper.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 17/07/25.
+//
+
+import Foundation
+
 struct PokemonMapper {
     
     func map(dto: PokemonModel?) throws -> PokemonBusinessEntity {
@@ -13,7 +22,7 @@ struct PokemonMapper {
             throw PokemonError.emptyName
         }
 
-        let entity = PokemonEntity(id: dto.id, name: dto.name)
+        let entity = PokemonModel(id: dto.id, name: dto.name, url: dto.url)
         return PokemonBusinessEntity(pokemon: entity)
     }
 
@@ -28,4 +37,21 @@ enum PokemonError: Error {
     case nilDTO
     case invalidId
     case emptyName
+}
+
+extension PokemonError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            return "URL inválida. No se pudo procesar la solicitud."
+        case .generic:
+            return "Algo salió mal. Intenta de nuevo más tarde."
+        case .nilDTO:
+            return "No se pudo obtener la información del Pokémon."
+        case .invalidId:
+            return "El ID del Pokémon no es válido."
+        case .emptyName:
+            return "El nombre del Pokémon está vacío o incompleto."
+        }
+    }
 }

@@ -1,38 +1,50 @@
+//
+//  PokemonListEntity.swift
+//  PokeApp
+//
+//  Created by Gil Alfredo Casimiro Ramírez on 16/07/25.
+//
+
 import Foundation
 
-final class PokemonListEntity {
-
-    private var id: Int
-    private var name: String
-    private var url: String
-
-    init(id: Int = 0, name: String = "", url: String = "") {
-        self.id = id
-        self.name = name
-        self.url = url
+class PokemonBusinessEntity {
+    private let pokemon: PokemonModel
+    
+    // Default init (útil para pruebas o estados vacíos)
+    init() {
+        self.pokemon = PokemonModel(id: 0, name: "", url: "")
     }
-
-    func setId(_ id: Int) {
-        self.id = id
+    
+    init(pokemon: PokemonModel) {
+        self.pokemon = pokemon
     }
-
-    func getId() -> Int {
-        return id
+    
+    // Validación de negocio (ejemplo)
+    func getValidatedPokemon() throws -> PokemonModel {
+        if pokemon.name == "MissingNo" {
+            throw PokemonBusinessRuleError.glitchedPokemon
+        }
+        return pokemon
     }
-
-    func setName(_ name: String) {
-        self.name = name
+    
+    // Acceso directo
+    var rawPokemon: PokemonModel {
+        pokemon
     }
-
-    func getName() -> String {
-        return name
+    
+    var name: String {
+        pokemon.name
     }
-
-    func setUrl(_ url: String) {
-        self.url = url
+    
+    var id: Int {
+        pokemon.id
     }
-
-    func getUrl() -> String {
-        return url
+    
+    var imageUrl: String {
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(id).png"
     }
+}
+
+enum PokemonBusinessRuleError: Error {
+    case glitchedPokemon
 }
