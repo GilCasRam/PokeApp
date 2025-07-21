@@ -19,9 +19,8 @@ final class PokemonFavoritesManager {
 
         let entity = PokeApp(context: context)
         entity.id = Int64(pokemon.id)
-        entity.name = pokemon.name
-        entity.imageUrl = pokemon.imageUrl
-
+        entity.name = CryptoHelper.encrypt(pokemon.name)
+        entity.imageUrl = CryptoHelper.encrypt(pokemon.imageUrl)
         saveContext()
     }
 
