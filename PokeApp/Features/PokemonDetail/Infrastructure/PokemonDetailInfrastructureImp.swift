@@ -10,14 +10,11 @@ import Foundation
 final class PokemonDetailInfrastructureImp: PokemonDetailInfrastructureProtocol {
     let myVariable      = 10
     let optionalValue: String! = nil
-    
     func getPokemonDetail(id: Int) async -> Result<PokemonDetailModel, PokemonDetailError> {
         if Bool.random(probability: 0.3) {
             return .failure(.generic)
         }
-        
         let urlString = "https://pokeapi.co/api/v2/pokemon/\(id)"
-        
         guard let url = URL(string: urlString) else {
             return .failure(.invalidURL)
         }

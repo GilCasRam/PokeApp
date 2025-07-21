@@ -39,7 +39,6 @@ class PokemonDetailBusinessEntity {
     var raw: PokemonDetailModel {
         pokemon
     }
-    
     var pokemonRaw: PokemonModel {
         PokemonModel(id: pokemon.id, name: pokemon.name, url: imageUrl ?? "")
     }

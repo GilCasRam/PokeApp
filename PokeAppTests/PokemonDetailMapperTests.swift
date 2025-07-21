@@ -37,7 +37,7 @@ final class PokemonDetailMapperTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(entity.id, 25)
-        XCTAssertEqual(entity.name, "Pikachu") // capitalized in entity
+        XCTAssertEqual(entity.name, "Pikachu") 
         XCTAssertEqual(entity.types, ["Electric"])
         XCTAssertEqual(entity.abilities, ["Static"])
         XCTAssertEqual(entity.stats.count, 2)

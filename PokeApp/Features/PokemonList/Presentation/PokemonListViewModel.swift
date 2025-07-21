@@ -9,23 +9,18 @@ import Foundation
 
 @MainActor
 final class PokemonListViewModel: ObservableObject {
-    
     @Published var errorMessage: String?
     @Published var pokemons: [PokemonBusinessEntity] = []
     @Published var limit: Int = 20
     @Published var offset: Int = 0
     @Published var isLoading = false
-    
     var useCase: GetPokemonListProtocol
-    
     init(useCase: GetPokemonListProtocol = PokemonFactory.useCase()) {
         self.useCase = useCase
     }
-    
     func loadPokemons() {
         guard !isLoading else { return }
         isLoading = true
-        
         Task {
             let result = await useCase.execute(limit: limit, offset: offset)
             switch result {
@@ -38,7 +33,6 @@ final class PokemonListViewModel: ObservableObject {
             case .failure(let error):
                 self.errorMessage = error.localizedDescription
             }
-            
             isLoading = false
         }
     }

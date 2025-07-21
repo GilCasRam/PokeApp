@@ -10,9 +10,7 @@ import UIKit
 
 @MainActor
 final class PokemonDetailViewModel: ObservableObject {
-    
     private var currentPokemonId: Int?
-    
     // MARK: - Dependencies
     private let useCase: GetPokemonDetailProtocol
 
@@ -46,7 +44,6 @@ final class PokemonDetailViewModel: ObservableObject {
             isLoading = false
         }
     }
-    
     func toggleFavorite() {
         let id = entity.id
         if isFavorite {

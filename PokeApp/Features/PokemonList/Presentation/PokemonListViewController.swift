@@ -10,31 +10,28 @@ import Combine
 import SwiftUI
 
 final class PokemonListViewController: UIViewController {
-    
     // MARK: - Properties
     private let viewModel = PokemonListViewModel()
     private var cancellables = Set<AnyCancellable>()
-    
     private let loadingIndicator = UIActivityIndicatorView(style: .large)
     private let errorLabel = UILabel()
-    
     private var collectionView: UICollectionView!
+    private var loadingViewController: UIHostingController<PokeballLoader>?
     private var isFetchingMore = false
-    
+    private var isPaginating = false
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         bindViewModel()
         viewModel.loadPokemons()
-        NotificationCenter.default.addObserver(self, selector: #selector(favoriteUpdated), name: .favoriteStatusChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(favoriteUpdated),
+                                               name: .favoriteStatusChanged, object: nil)
     }
-
     // MARK: - UI Setup
     private func setupUI() {
         title = "Pokémon List"
         view.backgroundColor = UIColor(Color.red.opacity(0.5))
-
         // MARK: - CollectionView Layout
         let layout = UICollectionViewFlowLayout()
         let spacing: CGFloat = 12
@@ -44,11 +41,10 @@ final class PokemonListViewController: UIViewController {
         layout.minimumInteritemSpacing = spacing
         layout.minimumLineSpacing = spacing
         layout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
-
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor =  .clear
-//        collectionView.backgroundColor = UIColor(named: "PrimaryYellow") ?? .systemGroupedBackground
+        //        collectionView.backgroundColor = UIColor(named: "PrimaryYellow") ?? .systemGroupedBackground
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(PokemonListCell.self, forCellWithReuseIdentifier: PokemonListCell.identifier)
@@ -56,13 +52,13 @@ final class PokemonListViewController: UIViewController {
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         collectionView.refreshControl = refreshControl
         collectionView.accessibilityIdentifier = "PokemonListCollectionView"
-
         view.addSubview(collectionView)
-
         // MARK: - Loading Indicator
-        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(loadingIndicator)
-
+        let loader = UIHostingController(rootView: PokeballLoader())
+        loader.view.backgroundColor = .clear
+        addChild(loader)
+        loader.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loader.view)
         // MARK: - Error Label
         errorLabel.textColor = .systemRed
         errorLabel.textAlignment = .center
@@ -70,21 +66,22 @@ final class PokemonListViewController: UIViewController {
         errorLabel.isHidden = true
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(errorLabel)
-
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
-            loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-
+            loader.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loader.view.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            loader.view.widthAnchor.constraint(equalToConstant: 60),
+            loader.view.heightAnchor.constraint(equalToConstant: 60),
             errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             errorLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             errorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             errorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
+        loader.didMove(toParent: self)
+        self.loadingViewController = loader
     }
     // MARK: - Bind ViewModel
     private func bindViewModel() {
@@ -92,21 +89,18 @@ final class PokemonListViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.collectionView.reloadData()
-                self?.loadingIndicator.stopAnimating()
+                self?.loadingViewController?.view.isHidden = true
                 self?.collectionView.isHidden = false
                 self?.errorLabel.isHidden = true
             }
             .store(in: &cancellables)
-
         viewModel.$errorMessage
             .receive(on: RunLoop.main)
             .sink { [weak self] errorMessage in
                 guard let self = self, let error = errorMessage else { return }
-                
-                self.loadingIndicator.stopAnimating()
+                self.loadingViewController?.view.isHidden = true
                 self.collectionView.isHidden = false
                 self.errorLabel.isHidden = true
-
                 let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { _ in
                     self.viewModel.loadPokemons()
@@ -115,8 +109,7 @@ final class PokemonListViewController: UIViewController {
                 self.present(alert, animated: true)
             }
             .store(in: &cancellables)
-
-        loadingIndicator.startAnimating()
+            self.loadingViewController?.view.isHidden = false
     }
     @objc private func favoriteUpdated() {
         collectionView.reloadData()
@@ -128,29 +121,25 @@ final class PokemonListViewController: UIViewController {
 }
 
 extension PokemonListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate {
-
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.pokemons.count
     }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: PokemonListCell.identifier,
             for: indexPath) as? PokemonListCell else {
             return UICollectionViewCell()
         }
-
         let pokemon = viewModel.pokemons[indexPath.item]
         cell.configure(with: pokemon)
         return cell
     }
-
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selected = viewModel.pokemons[indexPath.item]
         print("Selected Pokémon: \(selected.name)")
         let detailViewModel = PokemonDetailViewModel()
         detailViewModel.loadDetail(id: selected.id)
-
         let detailView = PokemonDetailView(
             viewModel: detailViewModel,
             onStatsTap: { [weak self] in
@@ -163,11 +152,11 @@ extension PokemonListViewController: UICollectionViewDataSource, UICollectionVie
             }
         )
         let hostingController = UIHostingController(rootView: detailView)
-        hostingController.view.backgroundColor = UIColor(named: "red_background") 
+        hostingController.view.backgroundColor = UIColor(named: "red_background")
         navigationController?.pushViewController(hostingController, animated: true)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let lastIndex = viewModel.pokemons.count - 1
         if indexPath.item == lastIndex && !viewModel.isLoading {
             viewModel.offset += viewModel.limit

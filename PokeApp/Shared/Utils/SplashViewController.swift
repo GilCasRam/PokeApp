@@ -36,13 +36,13 @@ final class SplashViewController: UIViewController {
         }
 
         NSLayoutConstraint.activate([
-            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 200),
+            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 250),
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoImageView.widthAnchor.constraint(equalToConstant: 250),
             logoImageView.heightAnchor.constraint(equalToConstant: 100),
 
             pokeballImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pokeballImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -200),
+            pokeballImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -250),
             pokeballImageView.widthAnchor.constraint(equalToConstant: 120),
             pokeballImageView.heightAnchor.constraint(equalToConstant: 120)
         ])

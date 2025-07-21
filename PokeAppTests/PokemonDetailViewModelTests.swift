@@ -22,7 +22,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
         // Act
         viewModel.loadDetail(id: 25)
 
-        // Assert (en MainActor por @Published)
+        // Assert 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             XCTAssertEqual(viewModel.entity.id, 25)
             XCTAssertEqual(viewModel.entity.name, "pikachu")

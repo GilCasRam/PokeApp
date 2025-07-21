@@ -8,7 +8,7 @@
 import Foundation
 
 struct CryptoHelper {
-    private static let key = 3 
+    private static let key = 3
 
     static func encrypt(_ text: String) -> String {
         return String(text.unicodeScalars.map {

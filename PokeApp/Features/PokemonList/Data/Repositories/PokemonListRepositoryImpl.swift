@@ -7,14 +7,6 @@
 
 import Foundation
 
-enum PokemonListMapperError: Error {
-    case invalidInput
-}
-
-protocol PokemonRepositoryProtocol {
-    func getPokemonList(limit: Int, offset: Int) async -> Result<[PokemonBusinessEntity], PokemonError>
-}
-
 final class PokemonRepositoryImp: PokemonRepositoryProtocol {
     private let dataSource: PokemonDataSourceProtocol
     private let mapper: PokemonMapper
@@ -26,7 +18,6 @@ final class PokemonRepositoryImp: PokemonRepositoryProtocol {
 
     func getPokemonList(limit: Int, offset: Int) async -> Result<[PokemonBusinessEntity], PokemonError> {
         let dataSourceResult = await dataSource.fetchPokemonList(limit: limit, offset: offset)
-        
         guard let result = try? dataSourceResult.get() else {
             return .failure(.generic)
         }
