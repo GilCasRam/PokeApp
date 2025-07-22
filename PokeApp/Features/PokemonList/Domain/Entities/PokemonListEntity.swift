@@ -9,14 +9,12 @@ import Foundation
 
 class PokemonBusinessEntity {
     private let pokemon: PokemonModel
-    
     init() {
         self.pokemon = PokemonModel(id: 0, name: "", url: "")
     }
     init(pokemon: PokemonModel) {
         self.pokemon = pokemon
     }
-    
     func getValidatedPokemon() throws -> PokemonModel {
         if pokemon.name == "MissingNo" {
             throw PokemonBusinessRuleError.glitchedPokemon
