@@ -48,6 +48,8 @@ The project is built using **Clean Architecture** + **MVVM**, ensuring modularit
 - ✅ Local encryption of favorites data.
 - ✅ SwiftLint with default rules (no custom overrides).
 
+![Demo](Assets/demo.gif)
+
 ## 📦 Installation
 
 1️⃣ Clone the repository:
