@@ -43,8 +43,9 @@ final class FavoritesViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-        let leftBarButton = UIBarButtonItem(title: "Desencriptar", style: .plain,
+        let leftBarButton = UIBarButtonItem(title: "Decrypt", style: .plain,
                                             target: self, action: #selector(didTapLeftBarButton))
+        leftBarButton.tintColor = .purple
         navigationItem.rightBarButtonItem = leftBarButton
     }
     @objc private func didTapLeftBarButton() {

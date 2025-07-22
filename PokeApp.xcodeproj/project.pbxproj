@@ -33,7 +33,7 @@
 		461561982E2861C500D92BE8 /* Exceptions for "PokeApp" folder in "PokeApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Source/Info.plist,
+				Info.plist,
 			);
 			target = 4615616C2E2861C500D92BE8 /* PokeApp */;
 		};

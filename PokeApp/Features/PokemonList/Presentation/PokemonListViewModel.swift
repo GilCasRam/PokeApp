@@ -18,22 +18,37 @@ final class PokemonListViewModel: ObservableObject {
     init(useCase: GetPokemonListProtocol = PokemonFactory.useCase()) {
         self.useCase = useCase
     }
+    /// Loads a list of Pokémon using the current pagination values.
+    /// Prevents duplicate loading and handles both initial and paginated states.
     func loadPokemons() {
+        // Avoid triggering multiple loads simultaneously.
         guard !isLoading else { return }
+
+        // Set the loading flag so the UI can display a spinner.
         isLoading = true
+
+        // Launch an asynchronous task to execute the use case.
         Task {
             let result = await useCase.execute(limit: limit, offset: offset)
+
             switch result {
             case .success(let list):
                 if offset == 0 {
+                    // If offset is 0, it's the initial load — replace the list.
                     self.pokemons = list
                 } else {
+                    // If offset > 0, it's a paginated load — append to existing list.
                     self.pokemons += list
                 }
+
             case .failure(let error):
+                // Handle and display any error that occurred during fetching.
                 self.errorMessage = error.localizedDescription
             }
+
+            // Reset the loading flag after the task finishes.
             isLoading = false
         }
     }
+
 }

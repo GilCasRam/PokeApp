@@ -94,7 +94,7 @@ struct PokemonDetailView: View {
                         onStatsTap?()
                     }
                     .padding()
-                    .background(Color.blue.opacity(0.2))
+                    .background(Color.purple)
                     .cornerRadius(8)
                     .disabled(!viewModel.isDetailLoaded)
                     .opacity(viewModel.isDetailLoaded ? 1 : 0.5)

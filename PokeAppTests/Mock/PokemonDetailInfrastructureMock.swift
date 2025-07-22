@@ -11,13 +11,21 @@ import XCTest
 
 final class PokemonDetailInfrastructureMock: PokemonDetailInfrastructureProtocol {
     
+    /// Simulates a successful API response by returning a hardcoded `PokemonDetailModel`.
+    /// This is used in mock infrastructure during unit tests or SwiftUI previews.
+    /// - Parameter id: The ID to assign to the mock Pokémon.
+    /// - Returns: A `Result` containing a `PokemonDetailModel` with realistic data.
     func getPokemonDetail(id: Int) async -> Result<PokemonDetailModel, PokemonDetailError> {
+        
+        // Creates a hardcoded mock detail model for a Pokémon (Pikachu).
         let mockDetail = PokemonDetailModel(
             id: id,
             name: "pikachu",
             height: 4,
             weight: 60,
-            sprites: Sprites(frontDefault: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"),
+            sprites: Sprites(
+                frontDefault: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
+            ),
             types: [
                 PokemonTypeSlot(
                     slot: 1,
@@ -46,6 +54,7 @@ final class PokemonDetailInfrastructureMock: PokemonDetailInfrastructureProtocol
             ]
         )
 
+        // Returns the mock detail wrapped in a success result.
         return .success(mockDetail)
     }
 }
