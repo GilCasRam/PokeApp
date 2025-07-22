@@ -10,8 +10,10 @@ import XCTest
 
 final class PokemonDetailMapperTests: XCTestCase {
 
+    /// Unit test to verify the correct mapping from `PokemonDetailModel` to `PokemonDetailBusinessEntity`.
+    /// Ensures that fields are transformed and formatted as expected for UI or domain use.
     func testMapPokemonDetailModelToBusinessEntity() throws {
-        // Arrange
+        // Arrange: Create a detailed mock DTO with realistic data.
         let model = PokemonDetailModel(
             id: 25,
             name: "pikachu",
@@ -32,13 +34,13 @@ final class PokemonDetailMapperTests: XCTestCase {
 
         let mapper = PokemonDetailMapper()
 
-        // Act
+        // Act: Perform the mapping to convert the DTO into a business entity.
         let entity = try mapper.map(dto: model)
 
-        // Assert
+        // Assert: Validate that the mapped values match expectations (including formatting).
         XCTAssertEqual(entity.id, 25)
-        XCTAssertEqual(entity.name, "Pikachu") 
-        XCTAssertEqual(entity.types, ["Electric"])
+        XCTAssertEqual(entity.name, "Pikachu") // Capitalized in the business entity
+        XCTAssertEqual(entity.types, ["Electric"]) // Capitalized and parsed
         XCTAssertEqual(entity.abilities, ["Static"])
         XCTAssertEqual(entity.stats.count, 2)
         XCTAssertEqual(entity.imageUrl, "https://pokeapi.co/api/v2/sprites/pokemon/25.png")
